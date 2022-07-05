@@ -6,10 +6,12 @@ import {
   Param,
   Delete,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
+import { JwtAuthGuard } from 'src/auth/auth/jwt-auth.guard';
 
 @Controller('project')
 export class ProjectController {
@@ -20,6 +22,7 @@ export class ProjectController {
     return this.projectService.create(createProjectDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   findAll() {
     return this.projectService.findAll();
