@@ -1,34 +1,34 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { UserService } from './../../user/user.service';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthUserDto } from './dto/auth-user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  private readonly users = [
-    {
-      userId: 1,
-      username: 'john',
-      password: 'changeme',
-    },
-    {
-      userId: 2,
-      username: 'maria',
-      password: 'guess',
-    },
-  ];
   /**
    *
    */
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    private readonly userService: UserService,
+  ) {}
+
   async login(user: AuthUserDto) {
-    const userExistent = this.users.find(
-      (x) => x.username == user.username && x.password == user.password,
-    );
-    if (!userExistent) throw new NotFoundException();
+    const userExistent = await this.userService.findByUserName(user.username);
+
+    if (!userExistent)
+      throw new BadRequestException('User or password is invalid.');
+
+    var result = await bcrypt.compare(user.password, userExistent.password);
+
+    if (!result) throw new BadRequestException('User or password is invalid.');
 
     const payload = {
       username: userExistent.username,
-      userExistent: userExistent.userId,
+      id: userExistent.id,
+      email: userExistent.email,
+      role: 'admin',
     };
 
     return {

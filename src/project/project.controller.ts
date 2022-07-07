@@ -1,3 +1,4 @@
+import { RoleGuard } from './../auth/guards/role.guard';
 import {
   Controller,
   Get,
@@ -11,7 +12,8 @@ import {
 import { ProjectService } from './project.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
-import { JwtAuthGuard } from 'src/auth/auth/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Role } from 'src/auth/decorators/role.decorator';
 
 @Controller('project')
 export class ProjectController {
@@ -22,7 +24,8 @@ export class ProjectController {
     return this.projectService.create(createProjectDto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Role('admin')
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @Get()
   findAll() {
     return this.projectService.findAll();
