@@ -6,10 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto';
+import { Post as PostBlog } from './entities/post.entity';
+import { PaginatedListDto } from 'src/common/dto/paginated-list.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -17,32 +21,33 @@ export class PostsController {
 
   @Post()
   create(@Body() createPostDto: CreatePostDto) {
-    createPostDto.generateSlug();
     return this.postsService.create(createPostDto);
   }
 
   @Get()
-  findAll() {
-    return this.postsService.findAll();
+  async findAll(
+    @Query() paginationQuery: PaginationQueryDto,
+  ): Promise<PaginatedListDto<PostBlog>> {
+    return await this.postsService.findAll(paginationQuery);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.postsService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    return await this.postsService.findOne(id);
   }
 
   @Get('slug/:slug')
-  findOneBySlug(@Param('slug') slug: string) {
-    return this.postsService.findOneBySlug(slug);
+  async findOneBySlug(@Param('slug') slug: string) {
+    return await this.postsService.findOneBySlug(slug);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postsService.update(id, updatePostDto);
+  async update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
+    await this.postsService.update(id, updatePostDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postsService.remove(id);
+  async remove(@Param('id') id: string) {
+    return await this.postsService.remove(id);
   }
 }

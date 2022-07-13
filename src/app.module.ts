@@ -7,6 +7,7 @@ import { ProjectModule } from './project/project.module';
 import { PostsModule } from './posts/posts.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { ContactModule } from './contact/contact.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { UserModule } from './user/user.module';
     PostsModule,
     AuthModule,
     UserModule,
+    ContactModule,
   ],
   controllers: [AppController],
   providers: [AppService],

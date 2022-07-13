@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
 
 export class CreatePostDto {
@@ -8,6 +9,7 @@ export class CreatePostDto {
   @ApiProperty({ type: String, description: 'title' })
   title: string;
 
+  @Exclude()
   slug: string;
 
   @IsNotEmpty({
@@ -15,11 +17,4 @@ export class CreatePostDto {
   })
   @ApiProperty({ type: String, description: 'text' })
   text: string;
-
-  /**
-   *
-   */
-  generateSlug() {
-    this.slug = this.title.replace(/ /g, '-').toLocaleLowerCase();
-  }
 }
