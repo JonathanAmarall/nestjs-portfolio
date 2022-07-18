@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
+import { Binary } from 'typeorm';
 
 export class CreateProjectDto {
   @IsNotEmpty({
@@ -14,9 +16,6 @@ export class CreateProjectDto {
   @ApiProperty({ type: String, description: 'description' })
   description: string;
 
-  @IsNotEmpty({
-    message: 'cover é obrigatório.',
-  })
-  @ApiProperty({ type: String, description: 'cover' })
+  @ApiProperty({ type: String, format: 'binary', description: 'cover' })
   cover: string;
 }
